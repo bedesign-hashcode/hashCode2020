@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.besign.contests.hashCode.Utils.exercisePath;
 import static com.besign.contests.hashCode.Utils.fileInProcess;
@@ -63,20 +64,36 @@ public class GoogleHash2020 {
         int libraries = Integer.parseInt(firstLine[1]);
         int days = Integer.parseInt(firstLine[2]);
         Request request = new Request(books, libraries, days);
+        request.bookScore = Stream.of(content.get(1).split(" ")).mapToInt(Integer::parseInt).toArray();
 
-        for (int i = 1; i<content.size(); i++) {
-            content.get(i);
+        int libIdx = 0;
+
+        for (int i = 3; i<content.size(); i+=2) {
+            String[] libLine1 = content.get(i).split(" ");
+            int signup = Integer.parseInt(libLine1[1]);
+            int parallel = Integer.parseInt(libLine1[2]);
+            int[] bookIdx = Stream.of(content.get(i + 1).split(" ")).mapToInt(Integer::parseInt).toArray();
+
+            Library l = new Library();
+            l.idx = libIdx;
+            l.parallel = parallel;
+            l.signup = signup;
+            l.booksArray = bookIdx;
+            request.libArray[libIdx] = l;
+
+            libIdx++;
         }
 
         return request;
     }
 
     static class Request {
-        int bookCount;
-        int libCount;
-        int days;
-        int[] bookIdToValues;
-        Library[] libArray;
+        public int bookCount;
+        public int libCount;
+        public int days;
+        public int[] bookIdToValues;
+        public int[] bookScore;
+        public Library[] libArray;
 
         public Request(int bookCount, int libCount, int days) {
             this.bookCount = bookCount;
@@ -89,12 +106,15 @@ public class GoogleHash2020 {
 
 
     static class Library {
-        int position;
-        int bookCount;
-        int signup;
-        int parallel;
-        int[] booksArray;
-        int score;
+        public int idx;
+        public int signup;
+        public int parallel;
+        public int[] booksArray;
+        public int score;
+
+        public int bookCount() {
+            return booksArray.length;
+        }
     }
 }
 
