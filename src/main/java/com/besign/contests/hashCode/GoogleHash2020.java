@@ -1,15 +1,17 @@
 package com.besign.contests.hashCode;
 
 
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.besign.contests.hashCode.Utils.*;
+import static com.besign.contests.hashCode.Utils.exercisePath;
+import static com.besign.contests.hashCode.Utils.fileInProcess;
+import static com.besign.contests.hashCode.Utils.filesInProcess;
+import static com.besign.contests.hashCode.Utils.getContentOfFile;
+import static com.besign.contests.hashCode.Utils.println;
+import static com.besign.contests.hashCode.Utils.writeSolutionFor;
 
-@Service
 public class GoogleHash2020 {
 
     public static void main(String[] args) throws IOException {

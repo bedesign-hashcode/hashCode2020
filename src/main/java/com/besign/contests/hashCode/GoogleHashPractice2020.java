@@ -4,10 +4,7 @@ package com.besign.contests.hashCode;
 import com.besign.contests.hashCode.dynamicImplementations.knapsack.Item;
 import com.besign.contests.hashCode.dynamicImplementations.knapsack.Knapsack;
 import com.besign.contests.hashCode.dynamicImplementations.knapsack.Solution;
-import com.besign.contests.hashCode.persistence.Matrix;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
-import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -16,11 +13,15 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static com.besign.contests.hashCode.Utils.*;
+import static com.besign.contests.hashCode.Utils.exercisePath;
+import static com.besign.contests.hashCode.Utils.fileInProcess;
+import static com.besign.contests.hashCode.Utils.filesInProcess;
+import static com.besign.contests.hashCode.Utils.getContentOfFile;
+import static com.besign.contests.hashCode.Utils.println;
+import static com.besign.contests.hashCode.Utils.toInt;
+import static com.besign.contests.hashCode.Utils.writeSolutionFor;
 
-@Service
 public class GoogleHashPractice2020 {
-    @Autowired private Matrix matrix;
     private Integer toStartMapSack;
 
     public static void main(String[] args) throws IOException {
@@ -55,9 +56,9 @@ public class GoogleHashPractice2020 {
             integerListPair = reduceTillKnapsackDoable(max, items);
         }
         if (integerListPair != null) {
-            items.removeAll(integerListPair.getSecond());
-            Solution solution = Knapsack.resolveWithKnapsack(integerListPair.getFirst(), items);
-            List<Integer> results = integerListPair.getSecond().stream().map(i -> i.name).collect(Collectors.toList());
+            items.removeAll(integerListPair.getRight());
+            Solution solution = Knapsack.resolveWithKnapsack(integerListPair.getLeft(), items);
+            List<Integer> results = integerListPair.getRight().stream().map(i -> i.name).collect(Collectors.toList());
             results.addAll(Arrays.stream(solution.itemsIds).boxed().collect(Collectors.toList()));
             return Arrays.asList("" + results.size(), results.stream().sorted().map(d -> "" + d).collect(Collectors.joining(" ")));
         } else {
