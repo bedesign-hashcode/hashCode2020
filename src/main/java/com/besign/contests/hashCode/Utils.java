@@ -21,7 +21,7 @@ public class Utils {
 
     public static List<String> getContentOfFile(String fileName) throws IOException {
         String classPath = Utils.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        String filePath = classPath.substring(0, classPath.indexOf("/target")) + "/" + exercisePath + "/" + fileName;
+        String filePath = classPath.substring(0, classPath.indexOf("/target")) + "/" + exercisePath + "/" + fileNam;
         return FileUtils.readLines(new File(filePath), StandardCharsets.UTF_8);
     }
 

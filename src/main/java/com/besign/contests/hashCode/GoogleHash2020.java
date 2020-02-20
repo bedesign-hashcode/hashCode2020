@@ -4,6 +4,8 @@ package com.besign.contests.hashCode;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.besign.contests.hashCode.Utils.exercisePath;
 import static com.besign.contests.hashCode.Utils.fileInProcess;
@@ -38,6 +40,44 @@ public class GoogleHash2020 {
     }
 
     private List<String> solution(List<String> content) {
-        return Arrays.asList("firstLine", "secondLine " + content);
+        Request request = evaluateRequest(content);
+        request = evaluateScoreOnLibraries(request);
+        return evaluateResponse(request);
+    }
+
+    private List<String> evaluateResponse(Request request) {
+        return null;
+    }
+
+    private Request evaluateScoreOnLibraries(Request request) {
+        return request;
+    }
+
+    private Request evaluateScoreOnLibrariesWithDifferentBookValue(Request request) {
+        return request;
+    }
+
+    private Request evaluateRequest(List<String> content) {
+        return null;
+    }
+
+    static class Request {
+        int bookCount;
+        int libCount;
+        int days;
+        int[] bookIdToValues;
+        List<Library> libraries;
+
+    }
+
+
+    static class Library {
+        int position;
+        int bookCount;
+        int signup;
+        int parallel;
+        int[] booksArray;
+        int score;
     }
 }
+
