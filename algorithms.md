@@ -86,3 +86,9 @@ In computer science, a problem is said to have overlapping subproblems if the pr
 
 # Quadratic knapsack problem
 The quadratic knapsack problem (QKP), first introduced in 19th century,[1] is an extension of knapsack problem that allows for quadratic terms in the objective function: Given a set of items, each with a weight, a value, and an extra profit that can be earned if two items are selected, determine the number of item to include in a collection without exceeding capacity of the knapsack, so as to maximize the overall profit
+
+# Ruzzo–Tompa algorithm
+The Ruzzo–Tompa algorithm is a linear-time algorithm for finding all non-overlapping, contiguous, maximal scoring subsequences in a sequence of real numbers
+
+# Subset sum problem
+One of them is: given a set (or multiset) of integers, is there a non-empty subset whose sum is zero?

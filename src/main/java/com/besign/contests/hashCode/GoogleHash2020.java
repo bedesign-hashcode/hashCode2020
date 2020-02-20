@@ -20,7 +20,7 @@ public class GoogleHash2020 {
 
     public void solve() throws IOException {
         exercisePath = "hashCode2020";
-        filesInProcess = Arrays.asList("a_example", "b_small", "c_medium", "d_quite_big", "e_also_big");
+        filesInProcess = Arrays.asList("a_example.txt", "b_read_on.txt", "c_incunabula.txt", "d_tough_choices.txt", "e_so_many_books.txt", "f_libraries_of_the_world.txt");
         for (String fileName: filesInProcess) {
             println(fileName);
             fileInProcess = fileName;
@@ -34,7 +34,7 @@ public class GoogleHash2020 {
     }
 
     private String evaluatePointsForSolution(List<String> solution) {
-        return "100000";
+        return "10000";
     }
 
     private List<String> solution(List<String> content) {
