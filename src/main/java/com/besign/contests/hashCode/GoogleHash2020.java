@@ -61,15 +61,15 @@ public class GoogleHash2020 {
 
             }
 
-            Arrays.sort(request.libArray, (o1, o2) -> {
-                int i = o2.score.compareTo(o1.score);
-                if (i == 0) {
-                    i = Integer.compare(o1.signup, o2.signup);
-                }
+//            Arrays.sort(request.libArray, (o1, o2) -> {
+//                int i = o2.score.compareTo(o1.score);
 //                if (i == 0) {
-//                    i = Double.compare(o2.bookCount(finalRequest1), o1.bookCount(finalRequest1));
+//                    i = Integer.compare(o1.signup, o2.signup);
 //                }
-                return i; });
+////                if (i == 0) {
+////                    i = Double.compare(o2.bookCount(finalRequest1), o1.bookCount(finalRequest1));
+////                }
+//                return i; });
 
 //            Library first = request.libArray[0];
             List<Library> combo = new ArrayList<>();
