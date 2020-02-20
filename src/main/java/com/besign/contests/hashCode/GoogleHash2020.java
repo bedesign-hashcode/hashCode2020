@@ -1,6 +1,7 @@
 package com.besign.contests.hashCode;
 
 
+import javax.swing.plaf.IconUIResource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,17 +48,30 @@ public class GoogleHash2020 {
         while (request.libArray.length > 0 && request.days > 0) {
             request = evaluateScoreOnLibraries(request);
             Request finalRequest1 = request;
+            Library first = request.libArray[0];
+            for (int i = 1; i <request.libArray.length; i++) {
+                Library current = request.libArray[i];
+                if (first.score < current.score) {
+                    first = current;
+                } else if (first.score.equals(current.score) && first.signup > current.signup) {
+                    first = current;
+                } else if (first.signup == current.signup && first.bookCount(request) < current.bookCount(request)) {
+                    first = current;
+                }
+
+            }
+
             Arrays.sort(request.libArray, (o1, o2) -> {
                 int i = o2.score.compareTo(o1.score);
                 if (i == 0) {
                     i = Integer.compare(o1.signup, o2.signup);
                 }
-                if (i == 0) {
-                    i = Double.compare(o2.bookCount(finalRequest1), o1.bookCount(finalRequest1));
-                }
+//                if (i == 0) {
+//                    i = Double.compare(o2.bookCount(finalRequest1), o1.bookCount(finalRequest1));
+//                }
                 return i; });
 
-            Library first = request.libArray[0];
+//            Library first = request.libArray[0];
             List<Library> combo = new ArrayList<>();
 
             first.booksArray = orderByValue(request, first.booksArray);
