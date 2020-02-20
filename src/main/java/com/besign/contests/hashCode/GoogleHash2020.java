@@ -58,7 +58,17 @@ public class GoogleHash2020 {
     }
 
     private Request evaluateRequest(List<String> content) {
-        return null;
+        String[] firstLine = content.get(0).split(" ");
+        int books = Integer.parseInt(firstLine[0]);
+        int libraries = Integer.parseInt(firstLine[1]);
+        int days = Integer.parseInt(firstLine[2]);
+        Request request = new Request(books, libraries, days);
+
+        for (int i = 1; i<content.size(); i++) {
+            content.get(i);
+        }
+
+        return request;
     }
 
     static class Request {
@@ -66,8 +76,15 @@ public class GoogleHash2020 {
         int libCount;
         int days;
         int[] bookIdToValues;
-        List<Library> libraries;
+        Library[] libArray;
 
+        public Request(int bookCount, int libCount, int days) {
+            this.bookCount = bookCount;
+            this.libCount = libCount;
+            this.days = days;
+            this.bookIdToValues = new int[bookCount];
+            this.libArray = new Library[libCount];
+        }
     }
 
 
