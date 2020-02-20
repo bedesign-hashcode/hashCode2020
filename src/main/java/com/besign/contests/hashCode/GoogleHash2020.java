@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.Stream;
@@ -51,29 +52,25 @@ public class GoogleHash2020 {
     }
 
     private List<String> evaluateResponse(Request request) {
-        Arrays.sort(request.libArray, Comparator.comparingDouble(o -> o.score));
+        Arrays.sort(request.libArray, (o1, o2) -> { return (int)(o2.score - o1.score); });
         ArrayList<String> strings = new ArrayList<>();
         int libraryCount = request.libArray.length;
         strings.add("" + libraryCount);
         for (int i = 0; i < libraryCount; i++) {
             Library library = request.libArray[i];
-            strings.add("" + library.idx + " " + library.bookCount());
+            strings.add("" + library.idx + " " + (int) library.bookCount());
             strings.add(withSpaces(orderByValue(request, library.booksArray)));
         }
         return strings;
     }
 
-    private int[] orderByValue(Request request, int[] booksArray) {
-        Integer[] booksIndex = IntStream.range(0, booksArray.length).boxed().toArray(Integer[]::new);
-        Arrays.sort(booksIndex, (i, j) -> request.bookIdToValues[booksIndex[i]] - request.bookIdToValues[booksIndex[j]]);
-        int[] ordered = new int[booksArray.length];
-        for (int i = 0; i > booksArray.length; i++) {
-            ordered[i] = booksArray[booksIndex[i]];
-        }
-        return ordered;
+    private Integer[] orderByValue(Request request, int[] booksArray) {
+        Integer[] objects = IntStream.of(booksArray).boxed().toArray(Integer[]::new);
+        Arrays.sort(objects, (i, j) -> request.bookScore[j] - request.bookScore[i]);
+        return objects;
     }
 
-    private String withSpaces(int[] booksArray) {
+    private String withSpaces(Integer[] booksArray) {
         String s = "";
         for (int i : booksArray) {
             s += i + " ";
@@ -89,7 +86,7 @@ public class GoogleHash2020 {
     }
 
     private double values(Request request, Library l) {
-        return IntStream.of(l.booksArray).mapToDouble(i -> request.bookIdToValues[i]).sum();
+        return IntStream.of(l.booksArray).mapToDouble(i -> request.bookScore[i]).sum();
     }
 
 
@@ -108,7 +105,9 @@ public class GoogleHash2020 {
         int libIdx = 0;
         for (int i = 2; i < content.size(); i += 2) {
             String[] libLine1 = content.get(i).split(" ");
-            int signup = Integer.parseInt(libLine1[1]);
+            int signup = 0 ;
+            signup = Integer.parseInt(libLine1[1]);
+
             int parallel = Integer.parseInt(libLine1[2]);
             int[] bookIdx = Stream.of(content.get(i + 1).split(" ")).mapToInt(Integer::parseInt).toArray();
 
@@ -129,15 +128,14 @@ public class GoogleHash2020 {
         public int bookCount;
         public int libCount;
         public int days;
-        public int[] bookIdToValues;
         public int[] bookScore;
         public Library[] libArray;
+        public Library[] libOrderedArray;
 
         public Request(int bookCount, int libCount, int days) {
             this.bookCount = bookCount;
             this.libCount = libCount;
             this.days = days;
-            this.bookIdToValues = new int[bookCount];
             this.libArray = new Library[libCount];
         }
     }

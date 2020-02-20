@@ -1,6 +1,7 @@
 package com.besign.contests.hashCode;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Utils {
     public static String exercisePath;
@@ -22,7 +24,7 @@ public class Utils {
     public static List<String> getContentOfFile(String fileName) throws IOException {
         String classPath = Utils.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         String filePath = classPath.substring(0, classPath.indexOf("/target")) + "/" + exercisePath + "/" + fileName;
-        return FileUtils.readLines(new File(filePath), StandardCharsets.UTF_8);
+        return FileUtils.readLines(new File(filePath), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
     }
 
     public static void writeSolutionFor(String fileName, List<String> content) throws IOException {
