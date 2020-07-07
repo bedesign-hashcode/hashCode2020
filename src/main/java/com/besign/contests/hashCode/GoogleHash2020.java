@@ -23,10 +23,16 @@ public class GoogleHash2020 {
         new GoogleHash2020().solve();
     }
 
+    private String fileName = "";
+
     public void solve() throws IOException {
         exercisePath = "hashCode2020";
         filesInProcess = Arrays.asList("a_example.txt", "b_read_on.txt", "c_incunabula.txt", "e_so_many_books.txt", "f_libraries_of_the_world.txt", "d_tough_choices.txt");
+
+//        filesInProcess = Arrays.asList("d_tough_choices.txt");
+
         for (String fileName : filesInProcess) {
+            this. fileName = fileName;
             println(fileName);
             fileInProcess = fileName;
 
@@ -45,42 +51,47 @@ public class GoogleHash2020 {
     private List<String> solution(List<String> content) {
         Request request = evaluateRequest(content);
         int idx = 0;
+        int idxCounter = 0;
+        int fullLenght = request.libArray.length;
         while (request.libArray.length > 0 && request.days > 0) {
             request = evaluateScoreOnLibraries(request);
             Request finalRequest1 = request;
-            Library first = request.libArray[0];
-            for (int i = 1; i <request.libArray.length; i++) {
-                Library current = request.libArray[i];
-                if (first.score < current.score) {
-                    first = current;
-                } else if (first.score.equals(current.score) && first.signup > current.signup) {
-                    first = current;
-                } else if (first.signup == current.signup && first.bookCount(request) < current.bookCount(request)) {
-                    first = current;
-                }
-
+            Library first = Stream.of(request.libArray).parallel().filter(current -> finalRequest1.days - current.signup > 0).findFirst().orElse(null);
+            if (first == null) {
+                break;
+            };
+            Library finalFirst = first;
+            if (first == null) {
+                break;
             }
+            first = Stream.of(request.libArray).parallel()
+                    .filter(current -> finalRequest1.days - current.signup > 0)
+                    .filter(current -> {
+                if (finalFirst.score < current.score) {
+                    return true;
+                } else if (finalFirst.score.equals(current.score) && finalFirst.signup > current.signup) {
+                    return true;
+                } else if (finalFirst.score.equals(current.score) && finalFirst.signup == current.signup && values(finalRequest1, finalFirst) < values(finalRequest1, current)) {
+                    return true;
+                }
+                return false;
+            }).findFirst().orElse(first);
 
-//            Arrays.sort(request.libArray, (o1, o2) -> {
-//                int i = o2.score.compareTo(o1.score);
-//                if (i == 0) {
-//                    i = Integer.compare(o1.signup, o2.signup);
-//                }
-////                if (i == 0) {
-////                    i = Double.compare(o2.bookCount(finalRequest1), o1.bookCount(finalRequest1));
-////                }
-//                return i; });
-
-//            Library first = request.libArray[0];
-            List<Library> combo = new ArrayList<>();
+            if (idxCounter % 1000 == 0)
+                println("Processed " + idxCounter +" of " + fullLenght + " remaining " +(request.libArray.length -1)  + " days " +  request.days);
 
             first.booksArray = orderByValue(request, first.booksArray);
+
+            first.booksArray = Arrays.copyOfRange(first.booksArray, 0, (int) Math.min((request.days - first.signup), first.bookCount(request)));
 
             Request finalRequest = request;
             IntStream.of(first.booksArray).forEach(bIdx -> finalRequest.bookScore[bIdx] = 0);
             request.days -= first.signup;
             request.libOrderedArray[idx ++] = first;
-            request.libArray = Arrays.copyOfRange(request.libArray, 1, request.libArray.length);
+            List<Library> libraries = new ArrayList<>();
+            libraries.addAll(Arrays.asList(request.libArray));
+            libraries.remove(first);
+            request.libArray = libraries.toArray(new Library[0]);
         }
 
         return evaluateResponse(request);
@@ -116,11 +127,16 @@ public class GoogleHash2020 {
     }
 
     private Request evaluateScoreOnLibraries(Request request) {
-        Stream.of(request.libArray).parallel().forEach(l -> {
-            l.score = Math.min((request.days - l.signup ) * l.parallel, l.bookCount(request)) *
-                    values(request, l) / l.signup
-                  ;
-        });
+        if ("d_tough_choices.txt".equals(fileName)) {
+            Stream.of(request.libArray).parallel().forEach(l -> l
+                    .score = Math.min((request.days - l.signup ) * l.parallel, l.bookCount(request)) *
+                    values(request, l));
+        } else {
+            Stream.of(request.libArray).parallel().forEach(l ->
+                    l.score = Math.min((request.days - l.signup) * l.parallel, l.bookCount(request) ) * values(request, l)
+                            / (l.bookCount(request) / l.parallel));
+        }
+
         return request;
     }
 
